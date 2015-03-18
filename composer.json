@@ -1,0 +1,20 @@
+{
+  "name": "DavisonSoftware/freshbooks-wakatime",
+  "description": "Freshbooks and WakaTime Integration",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jesse Ostrander",
+      "email": "jesse@davisonsoftware.io"
+    }
+  ],
+  "require": {
+    "rtconner/freshbooks-api": "dev-master",
+    "guzzlehttp/guzzle": "4.*",
+    "vlucas/phpdotenv": "2.x-dev"
+  },
+    "autoload": {
+      "psr-4": { "App\\": "app/" }
+    }
+}
