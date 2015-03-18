@@ -18,7 +18,7 @@ Once you've done that update your `.env` to your correct API Keys and Freshbooks
 
 If you want this to run every day, you'll need to set up a cron job similar to:
 
-`0 22 * * * /path/to/run.php`
+`0 22 * * * /usr/bin/php /path/to/run.php`
 
 And that's it!
 
