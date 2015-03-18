@@ -7,8 +7,6 @@
  */
 
 namespace App\Boot;
-
-use Dotenv\Dotenv;
 use App\Config\Config;
 use Freshbooks\FreshBooksApi;
 use GuzzleHttp\Client;
@@ -25,7 +23,7 @@ class Bootstrap {
         $bootstrap->transferProjects();
     }
     public function displayFreshbooksProjects() {
-        $fb = new FreshBooksApi("rockethouse", Config::get_freshbooks_key());
+        $fb = new FreshBooksApi(Config::get_freshbooks_domain(), Config::get_freshbooks_key());
         $fb->setMethod("project.list");
         $fb->request();
         if ($fb->success()) {
@@ -74,7 +72,7 @@ class Bootstrap {
     }
     private function createTimeEntry($project_id, $hours, $task_id = null) {
         if (!$task_id) $task_id = Config::get_freshbooks_task();
-        $fb = new FreshBooksApi("rockethouse", Config::get_freshbooks_key());
+        $fb = new FreshBooksApi(Config::get_freshbooks_domain(), Config::get_freshbooks_key());
         $fb->setMethod("time_entry.create");
         $fb->post([
             'time_entry' => [

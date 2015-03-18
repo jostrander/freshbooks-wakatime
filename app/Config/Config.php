@@ -20,4 +20,7 @@ class Config {
     public static function get_freshbooks_task() {
         return getenv('FRESHBOOKS_TASK_ID');
     }
+    public static function get_freshbooks_domain() {
+        return getenv('FRESHBOOKS_SUB_DOMAIN');
+    }
 }
