@@ -1,12 +1,5 @@
 #!/usr/bin/env php
 <?php
-/**
- * Created by PhpStorm.
- * User: jesse
- * Date: 18/03/15
- * Time: 1:43 AM
- */
-
 /*
  * Load Composer's Autoload File
  */
@@ -18,7 +11,16 @@ use Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__);
-$dotenv->required(array('FRESHBOOKS_API_KEY', 'WAKATIME_API_KEY', 'FRESHBOOKS_TASK_ID'))->notEmpty();
+$dotenv->required([
+        'FRESHBOOKS_API_KEY',
+        'FRESHBOOKS_TASK_ID',
+        'WAKATIME_API_KEY',
+        'MANDRILL.API_KEY',
+        'MANDRILL.FROM_EMAIL',
+        'MANDRILL.FROM_NAME',
+        'MANDRILL.TO_EMAIL'
+    ]
+)->notEmpty();
 /*
  * Start Application
  */

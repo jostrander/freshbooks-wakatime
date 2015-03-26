@@ -12,7 +12,8 @@
   "require": {
     "rtconner/freshbooks-api": "dev-master",
     "guzzlehttp/guzzle": "4.*",
-    "vlucas/phpdotenv": "2.x-dev"
+    "vlucas/phpdotenv": "2.x-dev",
+    "mandrill/mandrill": "1.0.54"
   },
     "autoload": {
       "psr-4": { "App\\": "app/" }
