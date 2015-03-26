@@ -71,6 +71,7 @@ class Bootstrap {
         }
     }
     private function createTimeEntry($project_id, $hours, $task_id = null) {
+        $date = new \DateTime();
         if (!$task_id) $task_id = Config::get_freshbooks_task();
         $fb = new FreshBooksApi(Config::get_freshbooks_domain(), Config::get_freshbooks_key());
         $fb->setMethod("time_entry.create");
@@ -78,7 +79,7 @@ class Bootstrap {
             'time_entry' => [
                 'project_id' => $project_id,
                 'task_id' => $task_id,
-                'notes' => 'Imported from WakaTime',
+                'notes' => 'Imported from WakaTime' . $date->format('Y/m/d H:i:s'),
                 'hours' => $hours
             ]
         ]);
