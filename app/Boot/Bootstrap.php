@@ -11,7 +11,7 @@ use App\Config\Config;
 use Freshbooks\FreshBooksApi;
 use GuzzleHttp\Client;
 use App\WakaTime;
-use Mandrill;
+use \Mandrill;
 
 
 class Bootstrap {
