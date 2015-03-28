@@ -21,6 +21,10 @@ $dotenv->required([
         'MANDRILL.TO_EMAIL'
     ]
 )->notEmpty();
+
+if (getenv('TIMEZONE')) {
+    date_default_timezone_set(getenv('TIMEZONE'));
+}
 /*
  * Start Application
  */

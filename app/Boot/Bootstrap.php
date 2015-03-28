@@ -38,11 +38,11 @@ class Bootstrap {
         $fb->request();
         if ($fb->success()) {
             $response = $fb->getResponse();
-            $this->logLines[] =  "------Freshbooks------\n";
+            $this->logLines[] =  "------Freshbooks------";
             foreach ($response['projects']['project'] as $project) {
                 $this->freshbooks_projects[$project['name']] = $project['project_id'];
-                $this->logLines[] =  "Name: " . $project['name'] . "\n";
-                $this->logLines[] =  "Project Id: " . $project['project_id'] . "\n";
+                $this->logLines[] =  "Name: " . $project['name'];
+                $this->logLines[] =  "Project Id: " . $project['project_id'];
             }
         } else {
             $this->logLines[] =  "Failed to return Freshbooks Projects";
@@ -56,11 +56,11 @@ class Bootstrap {
     {
         $wakatime = new WakaTime(new Client());
         $wakatime->setApiKey(Config::get("WAKATIME_API_KEY"));
-        $this->logLines[] =  "\n\n-------WAKATIME-------\n";
+        $this->logLines[] =  "\n\n-------WAKATIME-------";
         foreach ($wakatime->dailySummary(strtotime("today"), strtotime("today"))['data'][0]['projects'] as $project) {
             $this->wakatime_projects[$project['name']] = round($project['total_seconds'] / 3600, 2);
-            $this->logLines[] =  "Project: {$project['name']} \n";
-            $this->logLines[] =  "Time: {$project['text']}\n";
+            $this->logLines[] =  "Project: {$project['name']} ";
+            $this->logLines[] =  "Time: {$project['text']}";
         }
     }
 
@@ -69,15 +69,15 @@ class Bootstrap {
         if (!empty($this->freshbooks_projects) && !empty($this->wakatime_projects)) {
             foreach ($this->freshbooks_projects as $key => $value) {
                 if (isset($this->wakatime_projects[$key])) {
-                    $this->logLines[] =  "Matched Project: {$key}\n";
-                    $this->logLines[] =  "Hours: {$this->wakatime_projects[$key]}\n";
+                    $this->logLines[] =  "Matched Project: {$key}";
+                    $this->logLines[] =  "Hours: {$this->wakatime_projects[$key]}";
                     $this->createTimeEntry($value, $this->wakatime_projects[$key]);
                 } else {
-                    $this->logLines[] =  "No WakaTime Entries Found for FB Project: {$key}\n";
+                    $this->logLines[] =  "No WakaTime Entries Found for FB Project: {$key}";
                 }
             }
         } else {
-            echo "Either no projects found in Freshbooks or Wakatime...\n";
+            $this->logLines[] = "Either no projects found in FreshBooks or WakaTime...";
         }
     }
     private function createTimeEntry($project_id, $hours, $task_id = null) {
@@ -89,14 +89,14 @@ class Bootstrap {
             'time_entry' => [
                 'project_id' => $project_id,
                 'task_id' => $task_id,
-                'notes' => 'Imported from WakaTime' . $date->format('Y/m/d H:i:s'),
+                'notes' => 'Imported from WakaTime' . $date->format('d/m/y : h:iA'),
                 'hours' => $hours,
-		'date' => (new DateTime())->format('Y-m-d')
+		        'date' => (new \DateTime())->format('Y-m-d')
             ]
         ]);
         $fb->request();
         if ($fb->success()) {
-            $this->logLines[] = "------Imported Into Freshbooks------\n";
+            $this->logLines[] = "------Imported Into Freshbooks------";
         } else {
             $this->logLines[] = "Failed to Import";
             $this->logLines[] = $fb->getError();
