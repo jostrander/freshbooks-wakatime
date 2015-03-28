@@ -90,7 +90,8 @@ class Bootstrap {
                 'project_id' => $project_id,
                 'task_id' => $task_id,
                 'notes' => 'Imported from WakaTime' . $date->format('Y/m/d H:i:s'),
-                'hours' => $hours
+                'hours' => $hours,
+		'date' => (new DateTime())->format('Y-m-d')
             ]
         ]);
         $fb->request();
