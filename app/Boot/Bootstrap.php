@@ -57,7 +57,7 @@ class Bootstrap {
         $wakatime = new WakaTime(new Client());
         $wakatime->setApiKey(Config::get("WAKATIME_API_KEY"));
         $this->logLines[] =  "\n\n-------WAKATIME-------\n";
-        foreach ($wakatime->dailySummary(strtotime("today"), strtotime("today"))['data'][0]['projects'] as $project) {
+        foreach ($wakatime->dailySummary(strtotime("yesterday"), strtotime("yesterday"))['data'][0]['projects'] as $project) {
             $this->wakatime_projects[$project['name']] = round($project['total_seconds'] / 3600, 2);
             $this->logLines[] =  "Project: {$project['name']} \n";
             $this->logLines[] =  "Time: {$project['text']}\n";
@@ -90,7 +90,8 @@ class Bootstrap {
                 'project_id' => $project_id,
                 'task_id' => $task_id,
                 'notes' => 'Imported from WakaTime' . $date->format('Y/m/d H:i:s'),
-                'hours' => $hours
+                'hours' => $hours,
+		'date' => (new DateTime("yesterday"))->format("Y-m-d")
             ]
         ]);
         $fb->request();
