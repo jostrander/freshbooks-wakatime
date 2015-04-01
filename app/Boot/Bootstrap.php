@@ -97,7 +97,7 @@ class Bootstrap {
             'time_entry' => [
                 'project_id' => $project_id,
                 'task_id' => $task_id,
-                'notes' => 'Imported from WakaTime on ' . $date->format('d/m/y : h:iA') . ' from ' . $date->format->format("d/m/y"),
+                'notes' => 'Imported from WakaTime on ' . $date->format('d/m/y : h:iA') . ' from ' . $this->date->format("d/m/y"),
                 'hours' => $hours,
 		        'date' => $this->date->format('Y-m-d')
             ]
