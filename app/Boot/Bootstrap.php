@@ -20,17 +20,25 @@ class Bootstrap {
 
     private $mandrill;
 
+    /**
+     * @var \DateTime $date
+     */
+    private $date;
     private $logLines = [];
 
-    public static function start()
+    public static function start(\DateTime $date = null)
     {
         $bootstrap = new self();
+        $bootstrap->setDate($date);
         $bootstrap->displayFreshbooksProjects();
         $bootstrap->displayWakaTimeProjects();
         $bootstrap->transferProjects();
     }
     public function __construct() {
         $this->mandrill = new \Mandrill(Config::get("MANDRILL.API_KEY"));
+    }
+    public function setDate(\DateTime $date) {
+        $this->date = $date;
     }
     public function displayFreshbooksProjects() {
         $fb = new FreshBooksApi(Config::get("FRESHBOOKS_SUB_DOMAIN"), Config::get("FRESHBOOKS_API_KEY"));
@@ -57,7 +65,7 @@ class Bootstrap {
         $wakatime = new WakaTime(new Client());
         $wakatime->setApiKey(Config::get("WAKATIME_API_KEY"));
         $this->logLines[] =  "\n\n-------WAKATIME-------";
-        foreach ($wakatime->dailySummary(strtotime("today"), strtotime("today"))['data'][0]['projects'] as $project) {
+        foreach ($wakatime->dailySummary($this->date->format("m/d/Y"), $this->date->format("m/d/Y"))['data'][0]['projects'] as $project) {
             $this->wakatime_projects[$project['name']] = round($project['total_seconds'] / 3600, 2);
             $this->logLines[] =  "Project: {$project['name']} ";
             $this->logLines[] =  "Time: {$project['text']}";
@@ -89,9 +97,9 @@ class Bootstrap {
             'time_entry' => [
                 'project_id' => $project_id,
                 'task_id' => $task_id,
-                'notes' => 'Imported from WakaTime' . $date->format('d/m/y : h:iA'),
+                'notes' => 'Imported from WakaTime on ' . $date->format('d/m/y : h:iA') . ' from ' . $date->format->format("d/m/y"),
                 'hours' => $hours,
-		        'date' => (new \DateTime())->format('Y-m-d')
+		        'date' => $this->date->format('Y-m-d')
             ]
         ]);
         $fb->request();

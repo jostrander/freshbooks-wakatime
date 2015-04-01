@@ -25,7 +25,14 @@ $dotenv->required([
 if (getenv('TIMEZONE')) {
     date_default_timezone_set(getenv('TIMEZONE'));
 }
+
+$options = getopt("d::");
+if (isset($options['d'])) {
+    $runAsDate = new DateTime($options['d']);
+} else {
+    $runAsDate = new DateTime();
+}
 /*
  * Start Application
  */
-Bootstrap::start();
+Bootstrap::start($runAsDate);
