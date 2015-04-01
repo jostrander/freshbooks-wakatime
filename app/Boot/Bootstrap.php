@@ -36,6 +36,10 @@ class Bootstrap {
      * @var array
      */
     private $logLines = [];
+    /**
+     * @var boolean
+     */
+    private $didImport = false;
 
     /**
      * @param \DateTime $date
@@ -48,7 +52,7 @@ class Bootstrap {
         $bootstrap->displayWakaTimeProjects();
         $bootstrap->transferProjects();
         $bootstrap->sendMail();
-        $bootstrap->dumpLogToTerminal();
+        $bootstrap->finished();
     }
 
     /**
@@ -127,6 +131,7 @@ class Bootstrap {
      * @throws \Freshbooks\FreshBooksApiException
      */
     private function createTimeEntry($project_id, $hours, $task_id = null) {
+        $this->didImport = true;
         $date = new \DateTime();
         if (!$task_id) $task_id = Config::get("FRESHBOOKS_TASK_ID");
         $fb = new FreshBooksApi(Config::get("FRESHBOOKS_SUB_DOMAIN"), Config::get("FRESHBOOKS_API_KEY"));
@@ -173,10 +178,8 @@ class Bootstrap {
 
         }
     }
-    private function dumpLogToTerminal() {
-        foreach ($this->logLines as $line) {
-            echo $line."\n";
-        }
-        echo "\n\ndone.\n";
+    private function finished() {
+        echo ($this->didImport) ? 'Time entries found, synced.' : 'No time entries found';
+        echo "\n";
     }
 }
