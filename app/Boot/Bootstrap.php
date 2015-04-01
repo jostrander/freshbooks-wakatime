@@ -48,6 +48,7 @@ class Bootstrap {
         $bootstrap->displayWakaTimeProjects();
         $bootstrap->transferProjects();
         $bootstrap->sendMail();
+        $bootstrap->dumpLogToTerminal();
     }
 
     /**
@@ -171,5 +172,11 @@ class Bootstrap {
             echo 'A mandrill error occurred: '. get_class($e) . ' - ' . $e->getMessage();
 
         }
+    }
+    private function dumpLogToTerminal() {
+        foreach ($this->logLines as $line) {
+            echo $line."\n";
+        }
+        echo "\n\ndone.\n";
     }
 }
