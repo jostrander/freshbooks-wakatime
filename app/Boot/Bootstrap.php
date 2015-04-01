@@ -122,8 +122,7 @@ class Bootstrap {
             ],
         ];
         try {
-            $result = $this->mandrill->messages->send($message);
-            echo $result;
+            $this->mandrill->messages->send($message);
         } catch (\Mandrill_Error $e) {
             echo 'A mandrill error occurred: '. get_class($e) . ' - ' . $e->getMessage();
 
