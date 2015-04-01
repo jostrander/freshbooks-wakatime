@@ -15,17 +15,31 @@ use \Mandrill;
 
 
 class Bootstrap {
+    /**
+     * @var array
+     */
     private $freshbooks_projects;
+    /**
+     * @var array
+     */
     private $wakatime_projects;
-
+    /**
+     * @var Mandrill
+     */
     private $mandrill;
 
     /**
      * @var \DateTime $date
      */
     private $date;
+    /**
+     * @var array
+     */
     private $logLines = [];
 
+    /**
+     * @param \DateTime $date
+     */
     public static function start(\DateTime $date = null)
     {
         $bootstrap = new self();
@@ -33,13 +47,26 @@ class Bootstrap {
         $bootstrap->displayFreshbooksProjects();
         $bootstrap->displayWakaTimeProjects();
         $bootstrap->transferProjects();
+        $bootstrap->sendMail();
     }
+
+    /**
+     *
+     */
     public function __construct() {
         $this->mandrill = new \Mandrill(Config::get("MANDRILL.API_KEY"));
     }
+
+    /**
+     * @param \DateTime $date
+     */
     public function setDate(\DateTime $date) {
         $this->date = $date;
     }
+
+    /**
+     * @throws \Freshbooks\FreshBooksApiException
+     */
     public function displayFreshbooksProjects() {
         $fb = new FreshBooksApi(Config::get("FRESHBOOKS_SUB_DOMAIN"), Config::get("FRESHBOOKS_API_KEY"));
         $fb->setMethod("project.list");
@@ -72,6 +99,9 @@ class Bootstrap {
         }
     }
 
+    /**
+     *
+     */
     private function transferProjects() {
         $this->logLines[] =  "\n\n-----Importing!------\n\n";
         if (!empty($this->freshbooks_projects) && !empty($this->wakatime_projects)) {
@@ -88,6 +118,13 @@ class Bootstrap {
             $this->logLines[] = "Either no projects found in FreshBooks or WakaTime...";
         }
     }
+
+    /**
+     * @param $project_id
+     * @param $hours
+     * @param null $task_id
+     * @throws \Freshbooks\FreshBooksApiException
+     */
     private function createTimeEntry($project_id, $hours, $task_id = null) {
         $date = new \DateTime();
         if (!$task_id) $task_id = Config::get("FRESHBOOKS_TASK_ID");
@@ -109,6 +146,13 @@ class Bootstrap {
             $this->logLines[] = "Failed to Import";
             $this->logLines[] = $fb->getError();
         }
+    }
+
+    /**
+     * @method sendMail
+     * @return void
+     */
+    private function sendMail() {
         $message = [
             'text' => implode("\n", $this->logLines),
             'subject' => 'WakaTime Export Log',
@@ -127,6 +171,5 @@ class Bootstrap {
             echo 'A mandrill error occurred: '. get_class($e) . ' - ' . $e->getMessage();
 
         }
-
     }
 }
